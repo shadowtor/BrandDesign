@@ -35,3 +35,6 @@ mockups-cache/
 .env
 .env.*
 *.pem
+
+# local Pages build
+_site/
