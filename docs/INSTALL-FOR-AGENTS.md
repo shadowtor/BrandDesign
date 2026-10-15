@@ -33,12 +33,12 @@ an older `brand-studio` folder in the target only:
 | One project only | `python tools/install.py --project` | `./.claude/skills/brand-studio` |
 | Other agent | `python tools/install.py --dest <that agent's skills folder>` | `<folder>/brand-studio` |
 
-Use `python3` instead of `python` on macOS/Linux when `python` is missing; on Windows use `python` or `py -3`.
+Use `python3` instead of `python` on macOS/Linux when `python` is missing. On Windows use `python` or `py -3`.
 Add `--link` to symlink instead of copy (useful if the user will edit the repository).
 
 **Claude Code plugin alternative** (no clone needed): tell the user to run
 `/plugin marketplace add shadowtor/BrandDesign` and then `/plugin install brand-studio@brand-studio`.
-You cannot run slash commands yourself; give them these two lines.
+You cannot run slash commands yourself, so give them these two lines.
 
 ## 3. Verify
 
@@ -46,7 +46,7 @@ You cannot run slash commands yourself; give them these two lines.
 python skills/brand-studio/scripts/check_setup.py
 ```
 
-Expected: `PASS` for Python and a Chromium browser; `PASS` or `WARN` for uv and network. A `FAIL` means the skill cannot work:
+Expected: `PASS` for Python and a Chromium browser, and `PASS` or `WARN` for uv and network. A `FAIL` means the skill cannot work:
 fix it first (the line includes the fix). `INFO` lines for Pillow/pypdf/fonttools are normal: they are installed on demand.
 If `uv` is missing, offer to install it (command is in the `WARN` line) or run
 `pip install pillow pypdf fonttools uharfbuzz pymupdf` (plus `"psd-tools[composite]" numpy scipy scikit-image` for `--photo-mockups`) for the same effect.
@@ -68,8 +68,8 @@ The skill will ask a few questions, research the category, show three greyscale 
 - Never run scripts from the skill other than `check_setup.py` during installation.
 - Never commit, push or publish anything on the user's behalf.
 - Never download files other than the repository itself. (Photographic mockups are downloaded later, on demand, by the skill, and only
-  when the user asks for them; see the README credits.)
-- If a step fails, show the exact error and stop; do not improvise a different install location without asking.
+  when the user asks for them. See the README credits.)
+- If a step fails, show the exact error and stop. Do not improvise a different install location without asking.
 
 ## 6. Uninstall
 

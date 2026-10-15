@@ -3,7 +3,7 @@
 [![Smoke test](https://github.com/shadowtor/BrandDesign/actions/workflows/test.yml/badge.svg)](https://github.com/shadowtor/BrandDesign/actions/workflows/test.yml) [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 **A brand identity and logo design skill for AI coding agents** (Claude Code, Codex CLI, Gemini CLI and anything that reads
-Agent Skills folders: a directory with a `SKILL.md`). Give it a business brief; it researches the category, shows **three greyscale
+Agent Skills folders: a directory with a `SKILL.md`). Give it a business brief. It researches the category, shows **three greyscale
 logo sketches** for you to choose from, has an **independent sub-agent review them**, and only then builds the full brand kit.
 
 ![Three example brands built entirely by the skill: Kiln, Rookery and Marigold Press](examples/overview.png)
@@ -24,9 +24,9 @@ logo sketches** for you to choose from, has an **independent sub-agent review th
 | **Favicons** | favicon.svg/.ico, 16–48 px, apple-touch, 192/512, maskable, web manifest, head snippet, plus a **test sheet and report** (ICO structure, sizes, manifest, safe zone, 16 px legibility on light and dark tabs) |
 | **Social** | avatars (3 backgrounds × 3 sizes) and banners for LinkedIn, X, Facebook, YouTube, link previews, Instagram |
 | **Stationery** | A4 letterhead (sample + blank), header and footer strips, business card print file with bleed, email signature |
-| **Merch mockups** | items chosen for the business type (a coffee bean bag and travel mug for a roaster; jersey, mouse mat and hoodie for a gaming community; USB stick, cables and lanyards for tech…), **photographic** via free PSD mockups (opt-in) or labelled illustrations |
+| **Merch mockups** | items chosen for the business type (for example a bean bag and travel mug for a roaster, or a jersey and mouse mat for a gaming community), **photographic** via free PSD mockups (opt-in) or labelled illustrations |
 | **Guidelines** | a PDF built from the real files: idea, logo family, clear space, versions, colour (HEX/RGB/HSL/OKLCH, contrast), type, misuse (including ones only this mark can suffer), favicon test, social, stationery, merch |
-| **Tokens** | CSS, SCSS, Tailwind, DTCG JSON, GIMP palette, swatches; font embed notes |
+| **Tokens** | Colour tokens as CSS variables, SCSS, a Tailwind config and DTCG JSON, a GIMP palette, and font embed notes |
 
 **How it works:** intake → category research (bundled 1,400-logo and brand-palette libraries + live Fontsource/colour APIs) →
 8–12 one-line concepts → **three different sketches** (black SVG, audited at 16 px, one colour, reversed) → independent review →
@@ -77,7 +77,7 @@ Install the "brand-studio" Agent Skill for me.
 ### D. Upload as a skill file
 
 `python tools/package_skill.py` writes `dist/brand-studio.zip` (and a `-lite` zip without the reference SVGs) for UIs that take a skill upload.
-Note: the skill runs scripts and a browser; use an environment that allows both (a code-capable agent, not plain chat).
+Note: the skill runs scripts and a browser, so use an environment that allows both (a code-capable agent, not plain chat).
 
 ## Use
 
@@ -89,7 +89,7 @@ Just ask:
 
 > Turn this symbol into a favicon set and social avatars, and test the favicon at 16 px.
 
-It asks a few questions (or states assumptions), shows the concept sheet and **stops**. Pick a direction and say go; it builds the kit
+It asks a few questions (or states assumptions), shows the concept sheet and **stops**. Pick a direction and say go, and it builds the kit
 into the folder you name (on Windows keep the work folder on a short path).
 
 Build a kit by hand from approved artwork:
@@ -101,7 +101,7 @@ python skills/brand-studio/scripts/build_kit.py brand.json --out deliver --photo
 ```
 
 Photographic merch previews are opt-in: the first run downloads free PSDs from mockups-design.com into `~/.cache/brand-studio`
-(roughly 5 minutes; see [credits](#credits-and-attribution)).
+(roughly 5 minutes, see the [credits](#credits-and-attribution)).
 
 ## Merch is chosen for the business
 
@@ -121,7 +121,7 @@ Each item uses a photographic mockup when a free PSD exists, otherwise a drawn i
 ## Examples
 
 Fictional brands, built end to end. Each folder has the `brand.json`, the final SVG artwork, every SVG logo version, and previews of
-the guidelines PDF, favicon test, social banner, letterhead and merch mockups.
+the guidelines PDF and favicon test, plus a banner, the letterhead and merch.
 
 | Example | Business | Mark | Merch set |
 |---|---|---|---|
@@ -134,8 +134,8 @@ the guidelines PDF, favicon test, social banner, letterhead and merch mockups.
 - **No trademark clearance.** Search before launch (IP Australia, WIPO Global Brand Database, EUIPO TMview, USPTO). The skill says so every time.
 - **CMYK is indicative, Pantone is blank.** Print needs the printer's profile and a proof.
 - **The favicon test is a simulated tab.** Open the live site in a real browser once.
-- **Mockups are previews**, not publishable artwork; third-party PSDs are never redistributed.
-- It cannot guarantee a mark is unique. The reference libraries are for study; never copy or trace them.
+- **Mockups are previews**, not publishable artwork. Third-party PSDs are never redistributed.
+- It cannot guarantee a mark is unique. The reference libraries are for study only. Never copy or trace them.
 
 ## Develop
 
@@ -160,14 +160,15 @@ third-party material with their own terms: [THIRD_PARTY_NOTICES.md](THIRD_PARTY_
 ### Built on
 - **[kaankiziltug/logo-design-skill](https://github.com/kaankiziltug/logo-design-skill)** (MIT): the design process, principles, SVG
   construction and testing tooling, concept sheet, 1,400-logo reference library and its example boards.
-- **[fatihaydost/brand-identity-skill](https://github.com/fatihaydost/brand-identity-skill)** (MIT): the one-mechanism idea, AI-defaults
-  reflex test, OKLCH palette build and WCAG/colour-blindness audit, honest print guidance, kit and critique structure, token export.
+- **[fatihaydost/brand-identity-skill](https://github.com/fatihaydost/brand-identity-skill)** (MIT): the idea of one mechanism per brand, a
+  check against common AI defaults, an OKLCH palette build, a WCAG and colour-vision audit, honest print guidance, and the kit,
+  critique and token structure.
 
 ### Mockup sources (used for previews only)
 
 The photographic previews in `examples/` were made with free PSD mockups from **[mockups-design.com](https://mockups-design.com/)**
 (licence: free for any purpose including commercial use, no attribution required, but the PSD files themselves may not be
-redistributed; flattened finished images may be shared: [licence](https://mockups-design.com/license/)). We credit them anyway. The PSDs
+redistributed, though flattened finished images may be shared: [licence](https://mockups-design.com/license/)). We credit them anyway. The PSDs
 are **not** in this repository: the skill downloads them on demand into `~/.cache/brand-studio/mockups` when you run `--photo-mockups`.
 
 | Mockup | Pack | Used in |
@@ -188,7 +189,7 @@ are **not** in this repository: the skill downloads them on demand into `~/.cach
 Merch items with no free PSD on that site (jersey, lanyard, phone case, cable, travel mug, sticker sheet…) are drawn by the skill and
 labelled **illustration** in every kit. **[Unblast](https://unblast.com/mockups/)** has many more (lanyards, jerseys, phone cases,
 USB cards, tumblers, coffee packaging): its mockups come from third-party authors with their own licences and a JavaScript
-download step, so the skill does not download them automatically; download one yourself, read its licence, and pass it with
+download step, so the skill does not download them automatically. Download one yourself, read its licence, and pass it with
 `psd_mockup.py --psd`. Thank you to both sites and to the mockup authors.
 
 ### Inspiration and reference sites
