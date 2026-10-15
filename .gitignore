@@ -1,12 +1,37 @@
+# OS / editor
 .DS_Store
 Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+
+# Python
 __pycache__/
 *.pyc
+.venv/
+venv/
+
+# build output
 dist/
-*-workspace/
-preview*.html
-# working files and downloaded third-party mockup PSDs must never be committed
+*.zip
+*.log
+
+# working folders and full kits: examples/ holds the curated previews instead
 brand-studio-work/
+*-workspace/
+kit/
+deliver/
+preview*.html
+
+# third-party mockup PSDs are downloaded to ~/.cache/brand-studio and must never be committed
 *.psd
 *.psb
+*.ai
+*.eps
 mockups-cache/
+.cache/
+
+# secrets
+.env
+.env.*
+*.pem

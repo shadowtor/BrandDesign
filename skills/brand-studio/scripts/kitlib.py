@@ -403,7 +403,7 @@ def pick_variant(variants, ground):
     reach 2:1 and at least one reaches 3:1 against it (accents may be lighter than the main colour); else the best."""
     for n in ("colour-light", "colour-dark"):
         cs = [contrast(c, ground) for c in (used_colors(variants[n]) or ["#000000"])]
-        if min(cs) >= 1.5 and max(cs) >= 3.0:
+        if min(cs) >= 1.2 and max(cs) >= 3.0:
             return variants[n], n
     n = "white" if contrast("#ffffff", ground) >= contrast("#000000", ground) else "black"
     return variants[n], n

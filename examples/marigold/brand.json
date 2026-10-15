@@ -1,0 +1,61 @@
+{
+  "name": "Marigold Press",
+  "slug": "marigold",
+  "tagline": "Small prints, big colour",
+  "business_type": "artist",
+  "adjectives": [
+    "warm",
+    "playful",
+    "handmade"
+  ],
+  "mechanism": "A marigold seen from above: eight round petals around a deep teal heart, like a printed dot or a sticker.",
+  "rationale": "Fictional example brand. An independent illustrator selling prints, stickers and tote bags at markets and online. Circles are the shape of stickers, dots and presses; marigold is a flower that grows in anyone's garden.",
+  "colors": {
+    "primary": "#1F6F6B",
+    "secondary": "#F2A900",
+    "ink": "#23222B",
+    "paper": "#FAF8F5",
+    "accent": "#F2A900"
+  },
+  "color_names": {
+    "primary": "Press Teal",
+    "secondary": "Marigold",
+    "accent": "Marigold",
+    "ink": "Ink",
+    "paper": "Paper"
+  },
+  "logo": {
+    "symbol": "final/symbol.svg",
+    "horizontal": "final/horizontal.svg",
+    "vertical": "final/vertical.svg",
+    "square": "final/square.svg",
+    "wordmark": "final/wordmark.svg",
+    "favicon_source": "final/favicon-source.svg",
+    "app_icon": {
+      "bg": "#FAF8F5",
+      "fg": "keep"
+    },
+    "dark_map": {
+      "#23222b": "#faf8f5",
+      "#1f6f6b": "#5FC3BC"
+    },
+    "dark_ground": "#17161C"
+  },
+  "fonts": {
+    "display": "Instrument Serif",
+    "text": "Instrument Sans",
+    "display_weight": 400
+  },
+  "contact": {
+    "email": "hello@marigold.example",
+    "web": "marigold.example"
+  },
+  "merch": [
+    "sticker-sheet",
+    "business-card",
+    "tee",
+    "tote",
+    "notebook",
+    "poster"
+  ]
+}

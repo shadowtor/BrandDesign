@@ -3,6 +3,7 @@
   "slug": "kiln",
   "tagline": "Small-batch coffee, roasted in Istanbul",
   "industry": "coffee",
+  "business_type": "coffee",
   "adjectives": ["warm", "crafted", "modern"],
   "mechanism": "The arched mouth of a kiln, with one ember inside: the place where the coffee is made.",
   "rationale": "One sentence of why this answers the brief. Only claims you can stand behind; no invented stats.",
@@ -26,6 +27,6 @@
   "contact": {"address": "12 Roaster Lane, Istanbul", "phone": "+90 212 000 0000", "email": "hello@kiln.example", "web": "kiln.example"},
   "contact_name": "Name Surname",
   "contact_role": "Head Roaster",
-  "merch": ["mug", "tote", "apron", "tee", "cap", "sticker"],
+  "merch": ["coffee-bag", "coffee-cup", "mug", "travel-mug", "apron", "tote"],
   "misuse_extra": [{"svg": "final/misuse-1.svg", "label": "Don't close the arch"}]
 }

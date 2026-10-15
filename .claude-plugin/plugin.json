@@ -3,11 +3,11 @@
   "description": "Brand identity and logo design from a business brief: research, three greyscale sketches for approval, independent sub-agent review, then colour, type, lockups and a full kit (logos in colour/dark/black/white/greyscale as SVG/PNG/PDF/JPG, tested favicons, social banners, stationery, merch mockups chosen for the business, tokens, brand guidelines PDF).",
   "version": "1.0.0",
   "author": {
-    "name": "REPLACE-WITH-YOUR-NAME",
-    "url": "https://github.com/REPLACE-WITH-YOUR-GITHUB-USER"
+    "name": "Shadowtor",
+    "url": "https://github.com/shadowtor"
   },
-  "homepage": "https://github.com/REPLACE-WITH-YOUR-GITHUB-USER/brand-studio",
-  "repository": "https://github.com/REPLACE-WITH-YOUR-GITHUB-USER/brand-studio",
+  "homepage": "https://github.com/shadowtor/BrandDesign",
+  "repository": "https://github.com/shadowtor/BrandDesign",
   "license": "MIT",
   "keywords": ["logo", "branding", "brand-identity", "svg", "favicon", "brand-guidelines", "mockups", "design"]
 }

@@ -247,8 +247,24 @@ def build(brand, deliver, png=False):
 
 
 def img_uri(path):
+    """data: URI for a raster file. Large images (mockup photos, banners) are re-encoded as JPEG <= 1600 px so the PDF stays small."""
     import base64
+    import io
     ext = os.path.splitext(path)[1].lower().lstrip(".")
+    if ext in ("png", "jpg", "jpeg") and os.path.getsize(path) > 300_000:
+        from PIL import Image
+        im = Image.open(path)
+        if im.mode in ("RGBA", "LA", "P"):
+            im = im.convert("RGBA")
+            bg = Image.new("RGB", im.size, "white")
+            bg.paste(im, mask=im.split()[3])
+            im = bg
+        else:
+            im = im.convert("RGB")
+        im.thumbnail((1600, 1600))
+        buf = io.BytesIO()
+        im.save(buf, "JPEG", quality=82, optimize=True)
+        return "data:image/jpeg;base64," + base64.b64encode(buf.getvalue()).decode("ascii")
     mime = {"jpg": "jpeg", "svg": "svg+xml"}.get(ext, ext)
     return f"data:image/{mime};base64," + base64.b64encode(open(path, "rb").read()).decode("ascii")
 

@@ -96,7 +96,7 @@ picks. Skip the pause only if they said not to check in.
    `--sym-scale/--gap/--word-width` by eye, render, keep the numbers. Colour the final files with palette hexes.
 5. Favicon legibility: a dark mark vanishes on dark browser tabs. Give the favicon its own source with a light backing disc (`logo.favicon_source`) and set `logo.app_icon` to `{"bg": paper, "fg": "keep"}` so the app icon keeps the colour mark on a light tile (the test flags the failure; fix it, don't just report it).
 6. Fill `final/` and `brand.json` (`templates/brand.example.json`), add 1–2 misuse drawings only this mark can suffer.
-6. `build_kit.py brand.json --out deliver` (≈2 min; stages independent). Add `--photo-mockups` for photographic previews: it downloads the sector's free PSD mockups from mockups-design.com on demand (user-approved; cached in `~/.cache/brand-studio/mockups`, never redistributed, previews only) and places the logo in them with `psd_mockup.py` (mug, tee, sweatshirt, apron, card, signboard; adds ~5 min the first time). Always compare with the mockup's own JPG; if a PSD cannot be filled cleanly say so and keep the flat mockups. **Open and look at**: `guidelines/pages/*.png`,
+6. `build_kit.py brand.json --out deliver` (≈2 min; stages independent). **Merch is chosen for the business, not generic**: set `business_type` (and, for unusual brands, an explicit `merch` list) from `merch_catalog.py` — a coffee roaster gets a bean bag, travel mug and apron; a gaming community a jersey, mouse mat and hoodie; a tech company a business card, USB stick, cable, lanyard and laptop sleeve; an illustrator a sticker sheet, cards, tote and tee (`references/merch-catalogue.md`). Add `--photo-mockups` for photographic previews: it downloads the free PSD mockups for those items from mockups-design.com on demand (user-approved; cached in `~/.cache/brand-studio/mockups`, never redistributed, previews only) and places the logo in them with `psd_mockup.py` (~5 min the first time). Items with no PSD page get a drawn illustration; the guidelines "In use" pages show only the real mockup files, labelled photographic or illustration. Always compare with the mockup's own JPG; if a PSD cannot be filled cleanly say so and keep the illustration. **Open and look at**: `guidelines/pages/*.png`,
    `favicons/favicon-test.png` + report, `mockups/*-merch-overview.png`, one banner, the letterhead PNG, one PDF.
 7. **Independent review of the kit** with the review agent (colour, type, favicon sheet, mockups, guideline pages). Fix, rebuild.
 8. Present: where the files are, the favicon test result (say what it does not cover), review outcome, and the
@@ -147,10 +147,11 @@ existing logo (the library is for learning, never tracing).
 | `identity-system.md` · `bi-tokens-export.md` | system, tokens |
 | `critique.md` · `bi-critique.md` · `redesign.md` | critique/refresh modes |
 | `review-agent.md` | the independent review |
+| `merch-catalogue.md` | choosing merch items, adding PSD sources |
 | `live-sources.md` · `library-guide.md` · `examples.md` | APIs/sites; library; worked examples (`assets/examples/`) |
 
 ## 9. Script cheat-sheet
 `search_library.py` · `palette/search_palettes.py` · `live_sources.py` · `outline_text.py` · `svg_audit.py` · `preview_sheet.py`
 · `concept_sheet.py` · `render_png.py` · `export_variants.py` · `compose_lockup.py` · `review_pack.py` · `palette/palette_build.py`
 · `palette/palette_audit.py` · `build_kit.py` (calls `favicon_test.py`, `collateral.py`, `merch.py`, `guidelines.py`)
-· `psd_mockup.py` (optional photo mockups; `--set`, `--page`, `--psd`) · `presentation_board.py` (extra 6-mockup client board per concept, `--list-mockups`). Each has `--help`.
+· `merch_catalog.py` (business type → items) · `psd_mockup.py` (optional photo mockups; `--set`, `--item`, `--psd`) · `check_setup.py` · `presentation_board.py` (extra 6-mockup client board per concept, `--list-mockups`). Each has `--help`.

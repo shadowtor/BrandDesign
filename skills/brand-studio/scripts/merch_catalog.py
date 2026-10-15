@@ -50,6 +50,15 @@ ITEMS = {
     "coaster": ("Coaster", "free-round-coaster-mockup", "symbol", 0.6, 0),
 }
 
+# placement tweaks learned from checking each PSD against its own preview: dx/dy are fractions of the design area
+# (dy > 0 moves down), form/scale override the ITEMS defaults. Everything else uses ITEMS.
+ADJUST = {
+    "hoodie": {"form": "symbol", "scale": 0.1, "dx": 0.2, "dy": -0.1},   # left chest, clear of the drawstrings
+    "tote": {"scale": 0.36, "dy": 0.22},                                  # below the handles
+    "coffee-cup": {"scale": 0.55},
+    "mousemat": {"scale": 0.35},
+}
+
 BUSINESS_TYPES = {
     "coffee": ["coffee-bag", "travel-mug", "coffee-cup", "mug", "apron", "tote", "tee", "cap"],
     "food": ["apron", "paper-bag", "coffee-cup", "box", "tote", "label", "tee", "cap"],
@@ -125,4 +134,6 @@ def page_url(item):
 
 def spec(item):
     label, slug, form, scale, cyl = ITEMS[item]
-    return {"label": label, "page": page_url(item), "form": form, "scale": scale, "cylinder": cyl}
+    s = {"label": label, "page": page_url(item), "form": form, "scale": scale, "cylinder": cyl, "dx": 0.0, "dy": 0.0}
+    s.update(ADJUST.get(item, {}))
+    return s

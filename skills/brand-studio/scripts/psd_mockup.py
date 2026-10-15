@@ -90,18 +90,18 @@ def find_psds(folder):
     return sorted(os.path.join(d, f) for d, _, fs in os.walk(folder) for f in fs if f.lower().endswith(".psd"))
 
 
-def find_design_layer(psd):
-    best = None
-    for l in psd.descendants():
-        if l.kind == "smartobject" and l.visible and l.name.lower() in ("design", "your design", "logo", "your logo", "artwork"):
-            best = l
-            break
-    if best is None:
-        for l in psd.descendants():
-            if l.kind == "smartobject" and l.visible:
-                best = l
-                break
-    return best
+DESIGN_NAMES = re.compile(r"design|project|logo|artwork|print|mouse ?pad|your|label|cover|front|place", re.I)
+# whole words only: "lace" (shoe-lace layers) must not match inside "Place your design here"
+SKIP_NAMES = re.compile(r"\b(laces?|colou?rs?|shadows?|backgrounds?|highlights?|textures?|masks?|base|delete)\b", re.I)
+
+
+def find_design_layers(psd):
+    """Every visible smart object that carries the printed design (a cup PSD has one per cup; a desk scene may also have a laptop screen).
+    A layer whose name says design/logo/artwork wins over the skip list."""
+    strong = re.compile(r"design|logo|artwork|project|mouse ?pad|your", re.I)
+    cand = [l for l in psd.descendants() if l.kind == "smartobject" and l.visible and (strong.search(l.name) or not SKIP_NAMES.search(l.name))]
+    named = [l for l in cand if DESIGN_NAMES.search(l.name)]
+    return named or cand[:1]
 
 
 def cylinder_map(img, deg):
@@ -119,108 +119,104 @@ def cylinder_map(img, deg):
 
 
 def build(brand, psd_path, out, variant=None, cylinder=None, scale=None, preset=None, show_ref=True, form=None):
-    from PIL import Image
+    from PIL import Image, ImageChops
     from psd_tools import PSDImage
     from psd_tools.api.layers import PixelLayer
+    import numpy as np
     import render_png
 
     psd = PSDImage.open(psd_path)
     for l in psd.descendants():  # optimisation slides the authors ask you to delete
         if re.search(r"delete|read me|instruction", l.name, re.I) and l.kind in ("pixel", "type", "smartobject"):
             l.visible = False
-    layer = find_design_layer(psd)
-    if layer is None:
+    layers = find_design_layers(psd)
+    if not layers:
         print("No smart-object design layer found. Layers:")
         for l in psd.descendants():
             print(f"  {l.kind:12} {l.name!r} visible={l.visible}")
         raise SystemExit(2)
-    so = layer.smart_object
-    tb = so.transform_box
-    xs, ys = tb[0::2], tb[1::2]
-    box = (min(xs), min(ys), max(xs), max(ys))
-    bounds = so.warp.get(b"bounds", {})
-    sw, sh = int(bounds.get(b"Rght", box[2] - box[0])), int(bounds.get(b"Btom", box[3] - box[1]))
-    if preset in merch_catalog.ITEMS:
-        sp = merch_catalog.spec(preset)
-        pre = {"cylinder": sp["cylinder"], "scale": sp["scale"]}
-        form = form or sp["form"]
-    else:
-        pre = PRESETS["default"]
-    cyl = pre["cylinder"] if cylinder is None else cylinder
-    sc = pre["scale"] if scale is None else scale
+    sp = merch_catalog.spec(preset) if preset in merch_catalog.ITEMS else {"cylinder": 0, "scale": 0.6, "form": None, "dx": 0.0, "dy": 0.0}
+    form = form or sp["form"]
+    cyl = sp["cylinder"] if cylinder is None else cylinder
+    sc = sp["scale"] if scale is None else scale
 
-    # colour of the item under the design area (hide design, composite, sample)
-    layer.visible = False
-    base = psd.composite(force=True).convert("RGB")
-    cx, cy = int((layer.bbox[0] + layer.bbox[2]) / 2), int((layer.bbox[1] + layer.bbox[3]) / 2)
-    r, g, b = base.getpixel((cx, cy))
-    ground = kitlib.to_hex(r, g, b)
+    for l in layers:
+        l.visible = False
+    base = psd.composite(force=True).convert("RGB")   # the item without any design: used to pick the logo version
 
-    # artboard with the logo
     vs = None
-    order = [form] if form else []
-    for form_ in order + ["horizontal", "vertical", "symbol"]:
-        p = kitlib.logo_path(brand, form_)
-        if p and os.path.exists(p):
-            vs = kitlib.variants_of(kitlib.tight_viewbox(kitlib.read(p)), {**brand["logo"], **brand["colors"]})
+    for form_ in ([form] if form else []) + ["horizontal", "vertical", "symbol"]:
+        pth = kitlib.logo_path(brand, form_)
+        if pth and os.path.exists(pth):
+            vs = kitlib.variants_of(kitlib.tight_viewbox(kitlib.read(pth)), {**brand["logo"], **brand["colors"]})
             break
     if vs is None:
         raise SystemExit("error: no logo files in brand.json")
-    raw, vname = kitlib.pick_variant(vs, ground)
-    g_ = kitlib.geometry(raw)
-    # the smart object is usually stretched into a box of a different shape than its own canvas: pre-compensate so the
-    # logo keeps its proportions on the item (desired size is measured in the box, converted back to canvas units)
-    import math as _m
-    qd = lambda a, b: _m.hypot(tb[2 * b] - tb[2 * a], tb[2 * b + 1] - tb[2 * a + 1])
-    bwq, bhq = (qd(0, 1) + qd(3, 2)) / 2, (qd(0, 3) + qd(1, 2)) / 2
-    fx, fy = sw / bwq, sh / bhq          # canvas units per box pixel
-    wd = sc * bwq
-    hd = wd * g_["h"] / g_["w"]
-    if hd > bhq * 0.7:
-        hd = bhq * 0.7
-        wd = hd * g_["w"] / g_["h"]
-    lw, lh = max(2, int(wd * fx)), max(2, int(hd * fy))
-    with tempfile.TemporaryDirectory() as tmp:
-        svgp = os.path.join(tmp, "l.svg")
-        open(svgp, "w", encoding="utf-8").write(kitlib.fit_attrs(raw))
-        lp = os.path.join(tmp, "l.png")
-        nat_h = max(2, int(lw * g_["h"] / g_["w"]))
-        render_png.render(svgp, lp, lw, nat_h)
-        logo = Image.open(lp).convert("RGBA").resize((lw, lh), Image.LANCZOS)  # deliberate stretch: the smart object is squeezed back into its box
-    art = Image.new("RGBA", (sw, sh), (0, 0, 0, 0))
-    art.alpha_composite(logo, ((sw - lw) // 2, (sh - lh) // 2))
-    if cyl:
-        art = cylinder_map(art, cyl)
-    # map the artboard onto the smart object's transform quad (handles rotation and perspective)
-    import numpy as np
-    q = [(tb[0], tb[1]), (tb[2], tb[3]), (tb[4], tb[5]), (tb[6], tb[7])]
-    src = [(0, 0), (sw, 0), (sw, sh), (0, sh)]
-    A, B = [], []
-    for (x, y), (u, v) in zip(q, src):
-        A.append([x, y, 1, 0, 0, 0, -u * x, -u * y]); B.append(u)
-        A.append([0, 0, 0, x, y, 1, -v * x, -v * y]); B.append(v)
-    coef = np.linalg.solve(np.array(A, float), np.array(B, float))
-    canvas = art.transform(psd.size, Image.PERSPECTIVE, coef.tolist(), Image.BICUBIC)
-    # clip with the smart object's own layer mask when it has one (not its placeholder pixels, which can be sparse)
-    try:
-        if layer.has_mask():
-            from PIL import ImageChops
-            m = layer.mask.topil()
-            full = Image.new("L", psd.size, 0)
-            full.paste(m, (layer.mask.left, layer.mask.top))
-            canvas.putalpha(ImageChops.multiply(canvas.split()[3], full))
-    except Exception:
-        pass
-    parent = layer.parent
-    idx = list(parent).index(layer)
-    newl = PixelLayer.frompil(canvas, psd, name="Brand design", top=0, left=0)
-    parent.insert(idx + 1, newl) if hasattr(parent, "insert") else parent.append(newl)
+
+    notes = []
+    for layer in layers:
+        so = layer.smart_object
+        tb = so.transform_box
+        bounds = so.warp.get(b"bounds", {})
+        xs, ys = tb[0::2], tb[1::2]
+        sw = int(bounds.get(b"Rght", max(xs) - min(xs)))
+        sh = int(bounds.get(b"Btom", max(ys) - min(ys)))
+        x0, y0, x1, y1 = (max(0, layer.bbox[0]), max(0, layer.bbox[1]), min(psd.size[0], layer.bbox[2]), min(psd.size[1], layer.bbox[3]))
+        if x1 - x0 < 4 or y1 - y0 < 4:
+            x0, y0, x1, y1 = 0, 0, psd.size[0], psd.size[1]
+        reg = base.crop((x0, y0, x1, y1)).resize((24, 24))
+        arr = np.asarray(reg).reshape(-1, 3)
+        px = arr[np.argsort(arr.sum(axis=1))]   # median of the area: shadows and creases do not decide the logo colour
+        r, g, b = (int(v) for v in px[len(px) // 2])
+        ground = kitlib.to_hex(r, g, b)
+        raw, vname = kitlib.pick_variant(vs, ground)
+        g_ = kitlib.geometry(raw)
+        # the smart object is stretched into a box of another shape than its own canvas: pre-compensate so the logo keeps
+        # its proportions on the item (size measured in the box, converted back to canvas units)
+        qd = lambda i, j: math.hypot(tb[2 * j] - tb[2 * i], tb[2 * j + 1] - tb[2 * i + 1])
+        bwq, bhq = max(1.0, (qd(0, 1) + qd(3, 2)) / 2), max(1.0, (qd(0, 3) + qd(1, 2)) / 2)
+        fx, fy = sw / bwq, sh / bhq
+        wd = sc * bwq
+        hd = wd * g_["h"] / g_["w"]
+        if hd > bhq * 0.7:
+            hd = bhq * 0.7
+            wd = hd * g_["w"] / g_["h"]
+        lw, lh = max(2, int(wd * fx)), max(2, int(hd * fy))
+        with tempfile.TemporaryDirectory() as tmp:
+            svgp = os.path.join(tmp, "l.svg")
+            open(svgp, "w", encoding="utf-8").write(kitlib.fit_attrs(raw))
+            lp = os.path.join(tmp, "l.png")
+            render_png.render(svgp, lp, lw, max(2, int(lw * g_["h"] / g_["w"])))
+            logo = Image.open(lp).convert("RGBA").resize((lw, lh), Image.LANCZOS)  # deliberate stretch (see above)
+        art = Image.new("RGBA", (sw, sh), (0, 0, 0, 0))
+        art.alpha_composite(logo, (int((sw - lw) / 2 + sp["dx"] * sw), int((sh - lh) / 2 + sp["dy"] * sh)))
+        if cyl:
+            art = cylinder_map(art, cyl)
+        q = [(tb[0], tb[1]), (tb[2], tb[3]), (tb[4], tb[5]), (tb[6], tb[7])]
+        src = [(0, 0), (sw, 0), (sw, sh), (0, sh)]
+        A, B = [], []
+        for (x, y), (u, v) in zip(q, src):
+            A.append([x, y, 1, 0, 0, 0, -u * x, -u * y]); B.append(u)
+            A.append([0, 0, 0, x, y, 1, -v * x, -v * y]); B.append(v)
+        coef = np.linalg.solve(np.array(A, float), np.array(B, float))
+        canvas = art.transform(psd.size, Image.PERSPECTIVE, coef.tolist(), Image.BICUBIC)
+        try:  # clip with the smart object's own mask when it has one (not its placeholder pixels, which can be sparse)
+            if layer.has_mask():
+                m_ = layer.mask.topil()
+                full = Image.new("L", psd.size, 0)
+                full.paste(m_, (layer.mask.left, layer.mask.top))
+                canvas.putalpha(ImageChops.multiply(canvas.split()[3], full))
+        except Exception:
+            pass
+        parent = layer.parent
+        idx = list(parent).index(layer)
+        newl = PixelLayer.frompil(canvas, psd, name="Brand design", top=0, left=0)
+        parent.insert(idx + 1, newl) if hasattr(parent, "insert") else parent.append(newl)
+        notes.append(f"{layer.name}: {vname} on {ground}")
     result = psd.composite(force=True).convert("RGB")
     os.makedirs(os.path.dirname(os.path.abspath(out)), exist_ok=True)
     result.save(out)
-    # also write a contact image next to the mockup's own preview JPG when present
-    note = f"logo version {vname} on item colour {ground}; cylinder {cyl}°, width {sc:.2f}"
-    return out, note
+    return out, "; ".join(notes) + f"; cylinder {cyl} deg, width {sc:.2f}"
 
 
 def build_set(brand, out_dir, items=None):
