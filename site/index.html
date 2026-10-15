@@ -1,0 +1,352 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>brand-studio: brand identity and logo design skill for AI agents</title>
+<meta name="description" content="A skill for Claude Code, Codex and Gemini CLI. Give it a business brief, get three logo sketches first, then the full brand kit after you choose one.">
+<meta property="og:title" content="brand-studio">
+<meta property="og:description" content="Three logo sketches first. The whole brand after you pick one.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://shadowtor.github.io/BrandDesign/">
+<meta property="og:image" content="https://shadowtor.github.io/BrandDesign/social-card.png">
+<meta property="og:image:width" content="1280">
+<meta property="og:image:height" content="640">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --paper: #eef1f4;
+  --ink: #14181f;
+  --muted: #4f5966;
+  --guide: #1f5fd6;
+  --sheet: #ffffff;
+  --sheet-ink: #14181f;
+  --rule: rgba(20, 24, 31, .2);
+  --grid: rgba(20, 24, 31, .055);
+  --code-bg: #14181f;
+  --code-ink: #e8ecf1;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #101318;
+    --ink: #e8ecf1;
+    --muted: #a5afbc;
+    --guide: #7aa7ff;
+    --rule: rgba(232, 236, 241, .22);
+    --grid: rgba(232, 236, 241, .05);
+    --code-bg: #0a0c10;
+  }
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background-color: var(--paper);
+  background-image:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 32px 32px;
+  color: var(--ink);
+  font: 400 1.0625rem/1.6 "Schibsted Grotesk", system-ui, -apple-system, "Segoe UI", sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: var(--guide); text-underline-offset: .18em; }
+a:hover { text-decoration-thickness: 2px; }
+:focus-visible { outline: 3px solid var(--guide); outline-offset: 3px; border-radius: 2px; }
+.wrap { max-width: 1120px; margin: 0 auto; padding: 0 20px; }
+header.top { padding: 22px 0; display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; }
+header.top .name { font-weight: 800; font-size: 1.15rem; letter-spacing: -.01em; text-decoration: none; color: var(--ink); }
+header.top nav { display: flex; gap: 20px; flex-wrap: wrap; font-size: .97rem; }
+h1, h2, h3 { font-weight: 800; letter-spacing: -.02em; line-height: 1.08; margin: 0; }
+h1 { font-size: clamp(2.3rem, 5.4vw, 4.3rem); max-width: 17ch; }
+h2 { font-size: clamp(1.6rem, 3vw, 2.15rem); margin-bottom: 18px; }
+h3 { font-size: 1.3rem; }
+p { margin: 0 0 1em; max-width: 64ch; }
+.lead { font-size: 1.2rem; color: var(--muted); max-width: 58ch; margin-top: 22px; }
+section { padding: 56px 0; }
+.hero { padding: 36px 0 24px; }
+
+/* the sketch picker: the one memorable thing on the page */
+.picker { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 34px; border: 0; padding: 0; }
+.picker legend { font-weight: 600; margin-bottom: 12px; padding: 0; }
+.picker legend span { font-weight: 400; color: var(--muted); }
+.pick { position: relative; display: block; cursor: pointer; }
+.pick input { position: absolute; opacity: 0; inset: 0; width: 100%; height: 100%; cursor: pointer; margin: 0; }
+.tile {
+  background: var(--sheet); color: var(--sheet-ink);
+  aspect-ratio: 1 / 1; display: grid; place-items: center; position: relative;
+  box-shadow: 0 1px 0 var(--rule);
+}
+.tile::before, .tile::after { content: ""; position: absolute; width: 14px; height: 14px; border: 0 solid var(--sheet-ink); opacity: .55; }
+.tile::before { top: 10px; left: 10px; border-width: 1px 0 0 1px; }
+.tile::after { bottom: 10px; right: 10px; border-width: 0 1px 1px 0; }
+.tile img { width: 52%; height: auto; filter: grayscale(1); transition: filter .4s ease; }
+.pick input:checked + .tile img { filter: none; }
+.pick input:checked + .tile { outline: 3px solid var(--guide); outline-offset: 3px; }
+.pick input:focus-visible + .tile { outline: 3px solid var(--guide); outline-offset: 3px; }
+.tile .label { position: absolute; left: 14px; bottom: 12px; font-size: .9rem; font-weight: 600; }
+.tile .state { position: absolute; right: 14px; top: 10px; font-size: .85rem; color: #4f5966; }
+.pick input:checked + .tile .state::after { content: "chosen"; color: var(--guide); font-weight: 600; }
+.pick input:not(:checked) + .tile .state::after { content: "sketch"; }
+.kitpanel { margin-top: 26px; min-height: 120px; }
+.kitpanel .idle { color: var(--muted); }
+.kithead { display: flex; justify-content: space-between; gap: 20px; flex-wrap: wrap; align-items: baseline; }
+.kithead p { margin: 6px 0 0; }
+.kitlinks { display: flex; gap: 18px; flex-wrap: wrap; font-weight: 600; }
+.merch { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin: 18px 0 0; padding: 0; list-style: none; }
+.merch li { margin: 0; }
+.merch img { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; background: var(--sheet); }
+.merch span { display: block; font-size: .92rem; margin-top: 6px; }
+.merch .kind { color: var(--muted); }
+.note { font-size: .93rem; color: var(--muted); margin-top: 14px; }
+
+/* install */
+.cmdwrap { position: relative; max-width: 100%; margin: 0 0 14px; }
+.two > div { min-width: 0; }
+.cmd { background: var(--code-bg); color: var(--code-ink); border-radius: 4px; padding: 16px 92px 16px 18px; font: 500 .95rem/1.55 ui-monospace, "Cascadia Mono", Menlo, Consolas, monospace; overflow-x: auto; white-space: pre; margin: 0; max-width: 100%; }
+.copy { position: absolute; top: 10px; right: 10px; font: 600 .85rem/1 inherit; background: #e8ecf1; color: #14181f; border: 0; border-radius: 3px; padding: 8px 12px; cursor: pointer; }
+.copy:hover { background: #fff; }
+.how { counter-reset: step; list-style: none; padding: 0; margin: 8px 0 0; max-width: 760px; }
+.how li { counter-increment: step; position: relative; padding: 0 0 22px 56px; margin: 0; border-left: 1px solid var(--rule); margin-left: 17px; }
+.how li::before { content: counter(step); position: absolute; left: -18px; top: -2px; width: 35px; height: 35px; border-radius: 50%; background: var(--paper); border: 1px solid var(--ink); display: grid; place-items: center; font-weight: 600; font-size: .95rem; }
+.how li:last-child { border-left-color: transparent; padding-bottom: 0; }
+.how li.stop::before { background: var(--guide); border-color: var(--guide); color: #fff; }
+.how strong { display: block; }
+.how .stopnote { color: var(--guide); font-weight: 600; }
+dl.kit { display: grid; grid-template-columns: 11rem 1fr; gap: 14px 28px; margin: 0; max-width: 860px; }
+dl.kit dt { font-weight: 600; }
+dl.kit dd { margin: 0; }
+table { border-collapse: collapse; width: 100%; max-width: 860px; }
+th, td { text-align: left; padding: 11px 14px 11px 0; border-bottom: 1px solid var(--rule); vertical-align: top; }
+th { font-weight: 600; width: 11rem; }
+details { max-width: 860px; margin-top: 8px; }
+summary { cursor: pointer; font-weight: 600; padding: 6px 0; }
+ul.limits { padding-left: 1.2em; max-width: 66ch; }
+ul.limits li { margin-bottom: .5em; }
+footer { padding: 36px 0 60px; border-top: 1px solid var(--rule); color: var(--muted); font-size: .95rem; }
+footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+.two { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+@media (max-width: 760px) {
+  .picker { gap: 10px; }
+  .tile::after { display: none; }
+  .tile .label { font-size: .78rem; left: 8px; bottom: 8px; }
+  .tile .state { font-size: .72rem; right: 8px; top: 6px; }
+  .merch { grid-template-columns: repeat(2, 1fr); }
+  dl.kit { grid-template-columns: 1fr; gap: 2px 0; }
+  dl.kit dd { margin-bottom: 14px; }
+  .two { grid-template-columns: 1fr; gap: 0; }
+  th { width: 7rem; }
+}
+@media (prefers-reduced-motion: reduce) { .tile img { transition: none; } html { scroll-behavior: auto; } }
+</style>
+<noscript><style>.tile img { filter: none; } .pick input:not(:checked) + .tile .state::after { content: ""; }</style></noscript>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <a class="name" href="#top">brand-studio</a>
+    <nav aria-label="Primary">
+      <a href="#how">How it works</a>
+      <a href="#kit">The kit</a>
+      <a href="#install">Install</a>
+      <a href="https://github.com/shadowtor/BrandDesign">GitHub</a>
+    </nav>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <h1>Three logo sketches first. The whole brand after you pick one.</h1>
+      <p class="lead">brand-studio is a skill for Claude Code, Codex CLI and Gemini CLI. Give it a business brief. It researches the category, draws three greyscale sketches, has a second agent review them, and stops. You choose, and then it builds the kit.</p>
+
+      <fieldset class="picker" aria-describedby="picker-hint">
+        <legend>Pick a sketch <span id="picker-hint">(fictional example brands; the sketch stage is greyscale)</span></legend>
+        <label class="pick">
+          <input type="radio" name="brand" value="kiln">
+          <span class="tile"><img src="examples/kiln/final/symbol.svg" alt="Kiln: an arch with an ember inside" width="200" height="200"><span class="label">Kiln</span><span class="state"></span></span>
+        </label>
+        <label class="pick">
+          <input type="radio" name="brand" value="rookery">
+          <span class="tile"><img src="examples/rookery/final/symbol.svg" alt="Rookery: a rook built from square blocks" width="200" height="200"><span class="label">Rookery</span><span class="state"></span></span>
+        </label>
+        <label class="pick">
+          <input type="radio" name="brand" value="marigold">
+          <span class="tile"><img src="examples/marigold/final/symbol.svg" alt="Marigold Press: a flower with eight petals" width="200" height="200"><span class="label">Marigold Press</span><span class="state"></span></span>
+        </label>
+      </fieldset>
+
+      <div class="kitpanel" id="kitpanel" aria-live="polite">
+        <p class="idle">Choose one and it turns to colour, with the merch the skill picked for that kind of business.</p>
+      </div>
+    </section>
+
+    <section id="how">
+      <h2>How it works</h2>
+      <ol class="how">
+        <li><strong>Brief</strong>You describe the business, the audience and how it should feel. Anything missing becomes a stated assumption you can correct.</li>
+        <li><strong>Research</strong>It compares the category with 1,400 reference logos and brand palettes, and lists the clichés to avoid.</li>
+        <li><strong>Three sketches</strong>Three different ideas as black SVG, tested at 16 px, in one colour and reversed.</li>
+        <li><strong>Independent review</strong>A second agent that knows the business but not the favourite looks for look-alikes, odd readings and weak craft.</li>
+        <li class="stop"><strong>You choose</strong><span class="stopnote">The skill stops here.</span> No colour and no kit until you pick a sketch.</li>
+        <li><strong>The kit</strong>Colour, outlined type and lockups, then every file below. A second review checks the result.</li>
+      </ol>
+    </section>
+
+    <section id="kit">
+      <h2>What the kit contains</h2>
+      <dl class="kit">
+        <dt>Logos</dt><dd>Five forms: square, horizontal, vertical, symbol, wordmark. Each comes in full colour for light grounds, full colour for dark grounds, plus black, white and greyscale. Files are SVG, PNG, JPG and PDF.</dd>
+        <dt>Favicons</dt><dd>The full icon set with a test report: ICO contents, sizes, manifest, safe zone, and legibility at 16 px on light and dark tabs.</dd>
+        <dt>Social</dt><dd>Avatars and banners for LinkedIn, X, Facebook, YouTube, link previews and Instagram.</dd>
+        <dt>Stationery</dt><dd>An A4 letterhead with matching header and footer strips, a business card print file with bleed, and an email signature.</dd>
+        <dt>Merch mockups</dt><dd>Items that suit the business. Photographic where a free PSD exists, drawn and labelled where none does.</dd>
+        <dt>Guidelines and tokens</dt><dd>A PDF built from the real files, plus colour tokens for CSS, SCSS, Tailwind and DTCG.</dd>
+      </dl>
+
+      <h2 style="margin-top:46px">Merch follows the business</h2>
+      <table>
+        <tbody>
+          <tr><th scope="row">Coffee</th><td>Bean bag, travel mug, takeaway cup, mug, apron, tote</td></tr>
+          <tr><th scope="row">Gaming</th><td>Team jersey, mouse mat, hoodie, tee, cap, sticker sheet</td></tr>
+          <tr><th scope="row">Tech</th><td>Business card, USB stick, charging cable, lanyard, phone case, laptop sleeve</td></tr>
+          <tr><th scope="row">Artist</th><td>Sticker sheet, business card, tee, tote, notebook, poster</td></tr>
+          <tr><th scope="row">And more</th><td>Retail, fashion, fitness, finance, health, events, education, trades and others, or a list you set yourself</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="install">
+      <h2>Install</h2>
+      <p>You need Python 3.9 or newer, a Chromium-based browser (Chrome, Edge, Brave) and internet access for fonts. <a href="https://docs.astral.sh/uv/">uv</a> is recommended.</p>
+      <div class="two">
+        <div>
+          <h3 style="margin-bottom:12px">Claude Code</h3>
+          <pre class="cmd" id="c1">/plugin marketplace add shadowtor/BrandDesign
+/plugin install brand-studio@brand-studio</pre>
+        </div>
+        <div>
+          <h3 style="margin-bottom:12px">Codex, Gemini or another agent</h3>
+          <pre class="cmd" id="c2">git clone https://github.com/shadowtor/BrandDesign.git
+cd BrandDesign
+python tools/install.py --codex    # Codex CLI
+python tools/install.py --gemini   # Gemini CLI
+python tools/install.py --dest DIR # any other agent: its skills folder</pre>
+          <p class="note" style="margin-top:0">Run the one line that matches your agent.</p>
+        </div>
+      </div>
+      <details>
+        <summary>Or paste this into your agent and let it install the skill</summary>
+        <pre class="cmd" id="c3" style="margin-top:12px">Install the "brand-studio" Agent Skill for me.
+
+1. Clone https://github.com/shadowtor/BrandDesign (or git pull if I already have it) and read
+   docs/INSTALL-FOR-AGENTS.md in it. Follow that file exactly.
+2. Install it for the agent I am using right now (python tools/install.py --claude, --codex or --gemini).
+   Only copy the skills/brand-studio folder; do not change anything inside it.
+3. Run: python skills/brand-studio/scripts/check_setup.py. If it reports a FAIL, show me the line and its fix and stop.
+4. Tell me where it was installed and the check result, and that I must start a new session.
+   Do not commit, push or download anything else.</pre>
+      </details>
+      <p class="note">After installing, start a new session and ask: "Design a brand identity for my coffee roastery. Show me three logo sketches first."</p>
+    </section>
+
+    <section>
+      <h2>What it will not do for you</h2>
+      <ul class="limits">
+        <li>It does not clear trademarks. Search your market's register before you launch.</li>
+        <li>CMYK values are derived from screen colour, and Pantone is left blank. A printer needs to proof the real thing.</li>
+        <li>The favicon test uses a simulated browser tab. Open the live site once in a real browser.</li>
+        <li>Mockups are previews, not artwork to publish. Third-party PSD files are never redistributed.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Credits</h2>
+      <p>Built on <a href="https://github.com/kaankiziltug/logo-design-skill">logo-design-skill</a> and <a href="https://github.com/fatihaydost/brand-identity-skill">brand-identity-skill</a> (both MIT). The photographic previews use free PSD mockups from <a href="https://mockups-design.com/">mockups-design.com</a>. Every mockup, service and reference site is listed in the <a href="https://github.com/shadowtor/BrandDesign#credits-and-attribution">README credits</a>.</p>
+    </section>
+  </main>
+</div>
+<footer>
+  <div class="wrap">
+    <span>MIT licence. The examples are fictional brands.</span>
+    <span><a href="https://github.com/shadowtor/BrandDesign">Source</a> &nbsp; <a href="https://github.com/shadowtor/BrandDesign/releases/latest">Latest release</a></span>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var BRANDS = {
+    kiln: {
+      name: "Kiln", type: "a coffee roastery",
+      idea: "The arched firing mouth of a kiln with one ember inside: where the coffee is made.",
+      pdf: "examples/kiln/preview/kiln-brand-guidelines.pdf",
+      items: [["coffee-bag-photo", "Coffee bean bag", "photographic mockup"], ["coffee-cup-photo", "Takeaway cup", "photographic mockup"], ["mug-photo", "Mug", "photographic mockup"], ["travel-mug-illustration", "Travel mug", "illustration"], ["apron-photo", "Apron", "photographic mockup"], ["tote-photo", "Tote bag", "photographic mockup"]]
+    },
+    rookery: {
+      name: "Rookery", type: "a gaming community",
+      idea: "A rook, the chess piece that guards the corners, built from pixel-square blocks with one lit window.",
+      pdf: "examples/rookery/preview/rookery-brand-guidelines.pdf",
+      items: [["jersey-illustration", "Team jersey", "illustration"], ["mousemat-photo", "Mouse mat", "photographic mockup"], ["hoodie-photo", "Hoodie", "photographic mockup"], ["tee-photo", "T-shirt", "photographic mockup"], ["cap-photo", "Cap", "photographic mockup"], ["sticker-sheet-illustration", "Sticker sheet", "illustration"]]
+    },
+    marigold: {
+      name: "Marigold Press", type: "an independent illustrator",
+      idea: "A marigold seen from above: eight round petals around a deep teal heart, like a printed dot or a sticker.",
+      pdf: "examples/marigold/preview/marigold-brand-guidelines.pdf",
+      items: [["sticker-sheet-illustration", "Sticker sheet", "illustration"], ["business-card-photo", "Business card", "photographic mockup"], ["tee-photo", "T-shirt", "photographic mockup"], ["tote-photo", "Tote bag", "photographic mockup"], ["notebook-photo", "Notebook", "photographic mockup"], ["poster-photo", "Poster", "photographic mockup"]]
+    }
+  };
+  var panel = document.getElementById("kitpanel");
+  function el(tag, attrs, text) {
+    var n = document.createElement(tag);
+    if (attrs) Object.keys(attrs).forEach(function (k) { n.setAttribute(k, attrs[k]); });
+    if (text) n.textContent = text;
+    return n;
+  }
+  function show(key) {
+    var b = BRANDS[key], base = "examples/" + key + "/";
+    panel.textContent = "";
+    var head = el("div", { "class": "kithead" });
+    var left = el("div");
+    left.appendChild(el("h3", null, b.name));
+    left.appendChild(el("p", null, b.name + " is " + b.type + ". " + b.idea));
+    var links = el("div", { "class": "kitlinks" });
+    links.appendChild(el("a", { href: b.pdf }, "Guidelines PDF"));
+    links.appendChild(el("a", { href: "https://github.com/shadowtor/BrandDesign/tree/main/examples/" + key + "/logo/svg" }, "All logo versions"));
+    links.appendChild(el("a", { href: "https://github.com/shadowtor/BrandDesign/tree/main/examples/" + key }, "Example folder"));
+    head.appendChild(left);
+    head.appendChild(links);
+    panel.appendChild(head);
+    var ul = el("ul", { "class": "merch" });
+    b.items.forEach(function (it) {
+      var li = el("li");
+      li.appendChild(el("img", { src: base + "preview/mockups/" + it[0] + ".jpg", alt: b.name + " " + it[1].toLowerCase() + " mockup", loading: "lazy", width: "1200", height: "900" }));
+      var cap = el("span", null, it[1] + " ");
+      cap.appendChild(el("span", { "class": "kind" }, "(" + it[2] + ")"));
+      li.appendChild(cap);
+      ul.appendChild(li);
+    });
+    panel.appendChild(ul);
+    panel.appendChild(el("p", { "class": "note" }, "Merch is chosen for the business type. Photographic mockups come from free PSDs; items with none are drawn and labelled as illustrations."));
+  }
+  document.querySelectorAll('input[name="brand"]').forEach(function (r) {
+    r.addEventListener("change", function () { if (r.checked) show(r.value); });
+  });
+  document.querySelectorAll(".cmd").forEach(function (pre) {
+    var btn = el("button", { "class": "copy", type: "button", "aria-label": "Copy to clipboard" }, "Copy");
+    btn.addEventListener("click", function () {
+      var text = pre.textContent;
+      var done = function () { btn.textContent = "Copied"; setTimeout(function () { btn.textContent = "Copy"; }, 1600); };
+      if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(text).then(done, done); }
+      else { var t = document.createElement("textarea"); t.value = text; document.body.appendChild(t); t.select(); try { document.execCommand("copy"); } catch (e) {} document.body.removeChild(t); done(); }
+    });
+    var wrap = el("div", { "class": "cmdwrap" });
+    pre.parentNode.insertBefore(wrap, pre);
+    wrap.appendChild(pre);
+    wrap.appendChild(btn);
+  });
+})();
+</script>
+</body>
+</html>

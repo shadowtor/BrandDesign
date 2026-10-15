@@ -11,6 +11,8 @@ logo sketches** for you to choose from, has an **independent sub-agent review th
 <sub>Kiln (coffee roastery), Rookery (gaming community) and Marigold Press (illustrator): fictional briefs, every file in
 [`examples/`](examples) was produced by the skill. Merch is chosen for each business, not a generic mug and shirt.</sub>
 
+**Website:** [shadowtor.github.io/BrandDesign](https://shadowtor.github.io/BrandDesign/)
+
 **Contents:** [What you get](#what-you-get) · [Install](#install) · [Use](#use) · [Merch by business type](#merch-is-chosen-for-the-business) ·
 [Examples](#examples) · [Limits](#what-it-will-not-do-for-you) · [Develop](#develop) · [Credits](#credits-and-attribution)
 
