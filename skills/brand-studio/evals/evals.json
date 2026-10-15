@@ -1,0 +1,13 @@
+{
+  "skill_name": "brand-studio",
+  "evals": [
+    {"id": 1, "prompt": "We're opening a small-batch coffee roastery in Istanbul called Kiln. Warm, crafted, modern, not rustic cliche. Competitors: Kronotrop, Petra. It needs bags, cups, social and a letterhead. Brand identity please.",
+     "expected_output": "Brief with assumptions, research against competitors and category cliches, an independent sub-agent review, then ONE greyscale concept sheet with three different mark types, one-line ideas, risks, recommendation and the kit offer. Stops. No colour, boards or kit files yet."},
+    {"id": 2, "prompt": "We pick concept B for Kiln. Build the full kit.",
+     "expected_output": "Refined mark, audited palette, outlined wordmark, horizontal/vertical/square lockups, build_kit.py output tree (logo svg/png/jpg/pdf in colour-light/colour-dark/black/white/greyscale, favicons with test report, social, stationery, sector merch mockups, tokens, guidelines PDF), kit-stage sub-agent review, honest open-items list (trademark, CMYK/Pantone, real-browser favicon check)."},
+    {"id": 3, "prompt": "Here is our current logo (logo.svg) and website. What's wrong with it and how would you refresh it without losing recognition?",
+     "expected_output": "Critique with gates and scorecard, equity audit, top-3 measurable fixes, evolutionary refresh options; no redesign unless asked."},
+    {"id": 4, "prompt": "Make me a favicon set and social avatars from this existing symbol.svg, with a test that the favicon is legible at 16px.",
+     "expected_output": "Audit of the supplied mark, favicon_test.py report (structure + 16px pixel checks, warnings labelled heuristic), avatar set, statement that a real-browser check is still needed."}
+  ]
+}

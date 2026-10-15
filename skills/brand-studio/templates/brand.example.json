@@ -1,0 +1,31 @@
+{
+  "name": "Kiln",
+  "slug": "kiln",
+  "tagline": "Small-batch coffee, roasted in Istanbul",
+  "industry": "coffee",
+  "adjectives": ["warm", "crafted", "modern"],
+  "mechanism": "The arched mouth of a kiln, with one ember inside: the place where the coffee is made.",
+  "rationale": "One sentence of why this answers the brief. Only claims you can stand behind; no invented stats.",
+  "colors": {
+    "primary": "#C2491D", "secondary": "#F2B544", "accent": "#F2B544", "ink": "#2A1A12", "paper": "#FBF5EC"
+  },
+  "color_names": {"primary": "Kiln Orange", "secondary": "Ember", "accent": "Ember", "ink": "Roast", "paper": "Cream"},
+  "logo": {
+    "symbol": "final/symbol.svg",
+    "horizontal": "final/horizontal.svg",
+    "vertical": "final/vertical.svg",
+    "square": "final/square.svg",
+    "wordmark": "final/wordmark.svg",
+    "symbol_small": "final/symbol-small.svg",
+    "favicon_source": "final/favicon-source.svg",
+    "app_icon": {"bg": "#FBF5EC", "fg": "keep"},
+    "dark_map": {"#2a1a12": "#fbf5ec"},
+    "dark_ground": "#2A1A12"
+  },
+  "fonts": {"display": "Fraunces", "text": "Inter", "display_weight": 700},
+  "contact": {"address": "12 Roaster Lane, Istanbul", "phone": "+90 212 000 0000", "email": "hello@kiln.example", "web": "kiln.example"},
+  "contact_name": "Name Surname",
+  "contact_role": "Head Roaster",
+  "merch": ["mug", "tote", "apron", "tee", "cap", "sticker"],
+  "misuse_extra": [{"svg": "final/misuse-1.svg", "label": "Don't close the arch"}]
+}

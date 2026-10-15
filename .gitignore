@@ -1,0 +1,12 @@
+.DS_Store
+Thumbs.db
+__pycache__/
+*.pyc
+dist/
+*-workspace/
+preview*.html
+# working files and downloaded third-party mockup PSDs must never be committed
+brand-studio-work/
+*.psd
+*.psb
+mockups-cache/

@@ -1,0 +1,21 @@
+{
+  "name": "brand-studio",
+  "owner": {
+    "name": "REPLACE-WITH-YOUR-NAME",
+    "url": "https://github.com/REPLACE-WITH-YOUR-GITHUB-USER"
+  },
+  "metadata": {
+    "description": "Brand identity and logo design skill: brief to sketches to full brand kit.",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "brand-studio",
+      "source": "./",
+      "description": "Brand identity and logo design from a business brief: research, three greyscale sketches for approval, independent review, then the full kit (logos, favicons, social, stationery, merch mockups, tokens, guidelines PDF).",
+      "version": "1.0.0",
+      "category": "design",
+      "keywords": ["logo", "branding", "identity", "svg", "favicon", "guidelines", "mockups"]
+    }
+  ]
+}
