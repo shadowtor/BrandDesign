@@ -31,7 +31,7 @@ def main():
     bad |= line("PASS" if v >= (3, 9) else "FAIL", f"Python {v.major}.{v.minor}.{v.micro}", "install Python 3.9 or newer")
     uv = shutil.which("uv")
     line("PASS" if uv else "WARN", "uv " + ("found" if uv else "not found (needed to auto-install Pillow, pypdf, fonttools, psd-tools)"),
-         "" if uv else "Windows: powershell -c \"irm https://astral.sh/uv/install.ps1 | iex\"   macOS/Linux: curl -LsSf https://astral.sh/uv/install.sh | sh   (or pip install pillow pypdf fonttools uharfbuzz)")
+         "" if uv else "Windows: powershell -c \"irm https://astral.sh/uv/install.ps1 | iex\"   macOS/Linux: curl -LsSf https://astral.sh/uv/install.sh | sh   (or, without uv: pip install pillow pypdf fonttools uharfbuzz pymupdf; add \"psd-tools[composite]\" numpy scipy scikit-image for --photo-mockups)")
     try:
         import render_png
         chrome = render_png.find_chrome()

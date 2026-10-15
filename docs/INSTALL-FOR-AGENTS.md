@@ -49,7 +49,7 @@ python skills/brand-studio/scripts/check_setup.py
 Expected: `PASS` for Python and a Chromium browser; `PASS` or `WARN` for uv and network. A `FAIL` means the skill cannot work:
 fix it first (the line includes the fix). `INFO` lines for Pillow/pypdf/fonttools are normal: they are installed on demand.
 If `uv` is missing, offer to install it (command is in the `WARN` line) or run
-`pip install pillow pypdf fonttools uharfbuzz` for the same effect.
+`pip install pillow pypdf fonttools uharfbuzz pymupdf` (plus `"psd-tools[composite]" numpy scipy scikit-image` for `--photo-mockups`) for the same effect.
 
 Optional deeper check (needs internet, ~2 minutes): `python tools/smoke_test.py`.
 

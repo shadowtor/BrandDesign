@@ -90,13 +90,16 @@ def find_psds(folder):
     return sorted(os.path.join(d, f) for d, _, fs in os.walk(folder) for f in fs if f.lower().endswith(".psd"))
 
 
-DESIGN_NAMES = re.compile(r"design|project|logo|artwork|print|mouse ?pad|your|label|cover|front", re.I)
-SKIP_NAMES = re.compile(r"lace|colou?r|shadow|background|highlight|texture|mask|base|delete", re.I)
+DESIGN_NAMES = re.compile(r"design|project|logo|artwork|print|mouse ?pad|your|label|cover|front|place", re.I)
+# whole words only: "lace" (shoe-lace layers) must not match inside "Place your design here"
+SKIP_NAMES = re.compile(r"\b(laces?|colou?rs?|shadows?|backgrounds?|highlights?|textures?|masks?|base|delete)\b", re.I)
 
 
 def find_design_layers(psd):
-    """Every visible smart object that carries the printed design (a cup PSD has one per cup; a desk scene may also have a laptop screen)."""
-    cand = [l for l in psd.descendants() if l.kind == "smartobject" and l.visible and not SKIP_NAMES.search(l.name)]
+    """Every visible smart object that carries the printed design (a cup PSD has one per cup; a desk scene may also have a laptop screen).
+    A layer whose name says design/logo/artwork wins over the skip list."""
+    strong = re.compile(r"design|logo|artwork|project|mouse ?pad|your", re.I)
+    cand = [l for l in psd.descendants() if l.kind == "smartobject" and l.visible and (strong.search(l.name) or not SKIP_NAMES.search(l.name))]
     named = [l for l in cand if DESIGN_NAMES.search(l.name)]
     return named or cand[:1]
 
@@ -162,8 +165,9 @@ def build(brand, psd_path, out, variant=None, cylinder=None, scale=None, preset=
         if x1 - x0 < 4 or y1 - y0 < 4:
             x0, y0, x1, y1 = 0, 0, psd.size[0], psd.size[1]
         reg = base.crop((x0, y0, x1, y1)).resize((24, 24))
-        px = sorted(reg.getdata(), key=lambda c: sum(c))   # median of the area: shadows and creases do not decide the logo colour
-        r, g, b = px[len(px) // 2]
+        arr = np.asarray(reg).reshape(-1, 3)
+        px = arr[np.argsort(arr.sum(axis=1))]   # median of the area: shadows and creases do not decide the logo colour
+        r, g, b = (int(v) for v in px[len(px) // 2])
         ground = kitlib.to_hex(r, g, b)
         raw, vname = kitlib.pick_variant(vs, ground)
         g_ = kitlib.geometry(raw)
