@@ -1,0 +1,61 @@
+{
+  "name": "Kiln",
+  "slug": "kiln",
+  "tagline": "Small-batch coffee, roasted in Istanbul",
+  "business_type": "coffee",
+  "adjectives": [
+    "warm",
+    "crafted",
+    "modern"
+  ],
+  "mechanism": "The arched firing mouth of a kiln with one ember inside: where the coffee is made.",
+  "rationale": "Fictional example brand. A specialty roastery that wants a crafted, modern look without rustic clich\u00e9. The arch is the kiln; the ember is the roast; the arch also reads as a K-less initial 'n'.",
+  "colors": {
+    "primary": "#D9480F",
+    "secondary": "#F2B544",
+    "ink": "#1F1A17",
+    "paper": "#F7F5F0",
+    "accent": "#F2B544"
+  },
+  "color_names": {
+    "primary": "Kiln Orange",
+    "secondary": "Ember",
+    "accent": "Ember",
+    "ink": "Roast",
+    "paper": "Parchment"
+  },
+  "logo": {
+    "symbol": "final/symbol.svg",
+    "horizontal": "final/horizontal.svg",
+    "vertical": "final/vertical.svg",
+    "square": "final/square.svg",
+    "wordmark": "final/wordmark.svg",
+    "favicon_source": "final/favicon-source.svg",
+    "app_icon": {
+      "bg": "#F7F5F0",
+      "fg": "keep"
+    },
+    "dark_map": {
+      "#1f1a17": "#f7f5f0"
+    },
+    "dark_ground": "#14100E"
+  },
+  "fonts": {
+    "display": "Young Serif",
+    "text": "Hanken Grotesk",
+    "display_weight": 400
+  },
+  "contact": {
+    "address": "1 Example Street, Istanbul",
+    "email": "hello@kiln.example",
+    "web": "kiln.example"
+  },
+  "merch": [
+    "coffee-bag",
+    "coffee-cup",
+    "mug",
+    "travel-mug",
+    "apron",
+    "tote"
+  ]
+}

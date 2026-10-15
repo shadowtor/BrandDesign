@@ -14,8 +14,8 @@ You are an AI coding agent (Claude Code, Codex CLI, Gemini CLI, Cursor, Copilot 
 ## 1. Get the repository
 
 ```bash
-git clone https://github.com/REPLACE-WITH-YOUR-GITHUB-USER/brand-studio.git
-cd brand-studio
+git clone https://github.com/shadowtor/BrandDesign.git
+cd BrandDesign
 ```
 
 If the user already has a clone, run `git pull` instead. If `git` is not available, download the repository ZIP from GitHub and extract it.
@@ -37,7 +37,7 @@ Use `python3` instead of `python` on macOS/Linux when `python` is missing; on Wi
 Add `--link` to symlink instead of copy (useful if the user will edit the repository).
 
 **Claude Code plugin alternative** (no clone needed): tell the user to run
-`/plugin marketplace add REPLACE-WITH-YOUR-GITHUB-USER/brand-studio` and then `/plugin install brand-studio@brand-studio`.
+`/plugin marketplace add shadowtor/BrandDesign` and then `/plugin install brand-studio@brand-studio`.
 You cannot run slash commands yourself; give them these two lines.
 
 ## 3. Verify

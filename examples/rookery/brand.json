@@ -1,0 +1,60 @@
+{
+  "name": "Rookery",
+  "slug": "rookery",
+  "tagline": "Play together. Win together.",
+  "business_type": "gaming",
+  "adjectives": [
+    "competitive",
+    "welcoming",
+    "sharp"
+  ],
+  "mechanism": "A rook (the chess piece that guards the corners) built from pixel-square blocks, with one lit window.",
+  "rationale": "Fictional example brand. A community of competitive players who also want newcomers to feel welcome. Chess supplies strategy and teamwork; the blocky crenellations nod to pixels; the lime window is the one light left on for new players.",
+  "colors": {
+    "primary": "#12141C",
+    "secondary": "#8BE01E",
+    "ink": "#12141C",
+    "paper": "#F4F6F8",
+    "accent": "#8BE01E"
+  },
+  "color_names": {
+    "primary": "Night Shift",
+    "secondary": "Lobby Lime",
+    "accent": "Lobby Lime",
+    "ink": "Night Shift",
+    "paper": "Daylight"
+  },
+  "logo": {
+    "symbol": "final/symbol.svg",
+    "horizontal": "final/horizontal.svg",
+    "vertical": "final/vertical.svg",
+    "square": "final/square.svg",
+    "wordmark": "final/wordmark.svg",
+    "favicon_source": "final/favicon-source.svg",
+    "app_icon": {
+      "bg": "#12141C",
+      "fg": "keep"
+    },
+    "dark_map": {
+      "#12141c": "#f4f6f8"
+    },
+    "dark_ground": "#0B0C11"
+  },
+  "fonts": {
+    "display": "Chakra Petch",
+    "text": "Barlow",
+    "display_weight": 700
+  },
+  "contact": {
+    "email": "hello@rookery.example",
+    "web": "rookery.example"
+  },
+  "merch": [
+    "jersey",
+    "mousemat",
+    "hoodie",
+    "tee",
+    "cap",
+    "sticker-sheet"
+  ]
+}
